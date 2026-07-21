@@ -114,8 +114,9 @@
 
         .message-page {
             min-height: 100vh;
-            background: linear-gradient(rgba(100, 80, 120, 0.7), rgba(120, 70, 140, 0.7)), 
-                        linear-gradient(135deg, #e8c4b8 0%, #d4a5a5 100%);
+            background: url('https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=1200') center/cover,
+                        linear-gradient(rgba(150, 100, 150, 0.6), rgba(150, 100, 150, 0.6));
+            background-attachment: fixed;
             padding: 40px 20px;
             display: none;
             flex-direction: column;
@@ -130,12 +131,13 @@
 
         .message-container {
             max-width: 700px;
-            background: rgba(255, 255, 255, 0.97);
+            background: rgba(255, 255, 255, 0.95);
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
             z-index: 10;
             position: relative;
+            backdrop-filter: blur(10px);
         }
 
         .message-title {
