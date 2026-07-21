@@ -16,14 +16,94 @@
             overflow-x: hidden;
         }
 
+        /* Welcome Page */
+        .welcome-page {
+            min-height: 100vh;
+            background-image: url('https://lh3.googleusercontent.com/d/1jsI0XBJiJxMGzENAcdFXlEWLbQPDal7F=w1200');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .welcome-page.hidden {
+            display: none !important;
+        }
+
+        .welcome-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .welcome-container {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-text {
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+
+        .welcome-button {
+            padding: 15px 50px;
+            font-size: 20px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 20;
+            position: relative;
+        }
+
+        .welcome-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Gift Page */
         .gift-page {
             min-height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
+            display: none;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             padding: 20px;
+        }
+
+        .gift-page.show {
+            display: flex !important;
         }
 
         .gift-page.hidden {
@@ -112,12 +192,10 @@
             transform: scale(1.05);
         }
 
+        /* Message Page */
         .message-page {
             min-height: 100vh;
-            background-image: url('https://lh3.googleusercontent.com/d/1jsI0XBJiJxMGzENAcdFXlEWLbQPDal7F=w1000?authuser=0');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             padding: 40px 20px;
             display: none;
             flex-direction: column;
@@ -126,19 +204,12 @@
             position: relative;
         }
 
-        .message-page::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(100, 70, 100, 0.5);
-            z-index: 1;
-        }
-
         .message-page.show {
             display: flex !important;
+        }
+
+        .message-page.hidden {
+            display: none !important;
         }
 
         .message-container {
@@ -202,6 +273,15 @@
         }
 
         @media (max-width: 768px) {
+            .welcome-text {
+                font-size: 36px;
+            }
+
+            .welcome-button {
+                font-size: 16px;
+                padding: 12px 40px;
+            }
+
             .gift-text {
                 font-size: 20px;
             }
@@ -234,6 +314,15 @@
     </style>
 </head>
 <body>
+    <!-- Welcome Page -->
+    <div class="welcome-page" id="welcomePage">
+        <div class="welcome-container">
+            <div class="welcome-text">Welcome My Skibicki 💕</div>
+            <button class="welcome-button" onclick="goToGiftPage()">Click Here ✨</button>
+        </div>
+    </div>
+
+    <!-- Gift Page -->
     <div class="gift-page" id="giftPage">
         <div class="gift-container">
             <div class="gift-box"></div>
@@ -247,6 +336,7 @@
         </div>
     </div>
 
+    <!-- Message Page -->
     <div class="message-page" id="messagePage">
         <div class="message-container">
             <div class="message-title">Happy 17 Months Anniversary 💕</div>
@@ -264,6 +354,11 @@
     </div>
 
     <script>
+        function goToGiftPage() {
+            document.getElementById('welcomePage').classList.add('hidden');
+            document.getElementById('giftPage').classList.add('show');
+        }
+
         function createFirework(x, y) {
             const colors = ['#ff1744', '#ff5252', '#ff6e40', '#ff9100', '#ffd600', '#ffd700', '#ffea00', '#4CAF50', '#00e676', '#1de9b6', '#00bcd4', '#00b0ff', '#667eea', '#764ba2', '#ff006e', '#ff1493', '#d946ef', '#00d9ff', '#ffb700', '#ff4081'];
             
