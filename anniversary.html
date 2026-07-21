@@ -27,7 +27,7 @@
         }
 
         .gift-page.hidden {
-            display: none;
+            display: none !important;
         }
 
         .gift-container {
@@ -114,30 +114,28 @@
 
         .message-page {
             min-height: 100vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="floral" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="8" fill="%23d4a5a5"/><circle cx="80" cy="70" r="6" fill="%2390c590"/><circle cx="120" cy="40" r="7" fill="%23d4a5a5"/><circle cx="160" cy="80" r="5" fill="%2390c590"/></pattern></defs><rect width="1000" height="1000" fill="%23e8d4c8"/><rect width="1000" height="1000" fill="url(%23floral)"/></svg>');
-            background-size: cover;
-            background-attachment: fixed;
+            background: linear-gradient(rgba(100, 80, 120, 0.7), rgba(120, 70, 140, 0.7)), 
+                        linear-gradient(135deg, #e8c4b8 0%, #d4a5a5 100%);
             padding: 40px 20px;
-            display: flex;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
-        .message-page.hidden {
-            display: none;
+        .message-page.show {
+            display: flex !important;
         }
 
         .message-container {
             max-width: 700px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.97);
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
             z-index: 10;
             position: relative;
-            backdrop-filter: blur(5px);
         }
 
         .message-title {
@@ -181,13 +179,12 @@
             font-weight: bold;
         }
 
-        /* Fireworks Canvas */
-        canvas {
+        /* Fireworks */
+        .fireworks-particle {
             position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 9999;
             pointer-events: none;
+            z-index: 9999;
+            border-radius: 50%;
         }
 
         @media (max-width: 768px) {
@@ -223,8 +220,6 @@
     </style>
 </head>
 <body>
-    <canvas id="fireworksCanvas"></canvas>
-
     <div class="gift-page" id="giftPage">
         <div class="gift-container">
             <div class="gift-box"></div>
@@ -238,7 +233,7 @@
         </div>
     </div>
 
-    <div class="message-page hidden" id="messagePage">
+    <div class="message-page" id="messagePage">
         <div class="message-container">
             <div class="message-title">Happy 17 Months Anniversary 💕</div>
 
@@ -255,140 +250,70 @@
     </div>
 
     <script>
-        // Enhanced Beautiful Fireworks with More Effects
-        class Fireworks {
-            constructor() {
-                this.canvas = document.getElementById('fireworksCanvas');
-                this.ctx = this.canvas.getContext('2d');
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight;
-                this.particles = [];
-                this.colors = [
-                    '#ff1744', '#ff5252', '#ff6e40', '#ff9100', '#ffd600',
-                    '#ffd700', '#ffea00', '#4CAF50', '#00e676', '#1de9b6',
-                    '#00bcd4', '#00b0ff', '#667eea', '#764ba2', '#ff006e',
-                    '#ff1493', '#d946ef', '#00d9ff', '#ffb700', '#ff4081'
-                ];
-            }
-
-            createExplosion(x, y) {
-                for (let i = 0; i < 150; i++) {
-                    const angle = (Math.random() * Math.PI * 2);
-                    const velocity = 3 + Math.random() * 10;
-                    const life = 80 + Math.random() * 100;
+        function createFirework(x, y) {
+            const colors = ['#ff1744', '#ff5252', '#ff6e40', '#ff9100', '#ffd600', '#ffd700', '#ffea00', '#4CAF50', '#00e676', '#1de9b6', '#00bcd4', '#00b0ff', '#667eea', '#764ba2', '#ff006e', '#ff1493', '#d946ef', '#00d9ff', '#ffb700', '#ff4081'];
+            
+            for (let i = 0; i < 150; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 3 + Math.random() * 10;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                const particle = document.createElement('div');
+                particle.className = 'fireworks-particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.width = '8px';
+                particle.style.height = '8px';
+                particle.style.backgroundColor = color;
+                particle.style.boxShadow = `0 0 10px ${color}`;
+                document.body.appendChild(particle);
+                
+                let vx = Math.cos(angle) * velocity;
+                let vy = Math.sin(angle) * velocity;
+                let posX = x;
+                let posY = y;
+                let life = 100;
+                
+                const animate = () => {
+                    life--;
+                    vy += 0.1;
+                    posX += vx;
+                    posY += vy;
                     
-                    this.particles.push({
-                        x: x,
-                        y: y,
-                        vx: Math.cos(angle) * velocity,
-                        vy: Math.sin(angle) * velocity,
-                        life: life,
-                        maxLife: life,
-                        color: this.colors[Math.floor(Math.random() * this.colors.length)],
-                        size: 2 + Math.random() * 5,
-                        gravity: 0.08 + Math.random() * 0.15,
-                        friction: 0.98 + Math.random() * 0.02
-                    });
-                }
-            }
-
-            createTrail(x, y) {
-                for (let i = 0; i < 30; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const velocity = 1 + Math.random() * 4;
+                    particle.style.left = posX + 'px';
+                    particle.style.top = posY + 'px';
+                    particle.style.opacity = life / 100;
                     
-                    this.particles.push({
-                        x: x + Math.cos(angle) * 20,
-                        y: y + Math.sin(angle) * 20,
-                        vx: Math.cos(angle) * velocity,
-                        vy: Math.sin(angle) * velocity,
-                        life: 40 + Math.random() * 40,
-                        maxLife: 40 + Math.random() * 40,
-                        color: this.colors[Math.floor(Math.random() * this.colors.length)],
-                        size: 1 + Math.random() * 2,
-                        gravity: 0.05,
-                        friction: 0.96
-                    });
-                }
-            }
-
-            update() {
-                this.particles.forEach((p, index) => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.vy += p.gravity;
-                    p.vx *= p.friction;
-                    p.vy *= p.friction;
-                    p.life--;
-
-                    if (p.life <= 0) {
-                        this.particles.splice(index, 1);
+                    if (life > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        particle.remove();
                     }
-                });
-            }
-
-            draw() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                
-                this.particles.forEach(p => {
-                    const opacity = p.life / p.maxLife;
-                    
-                    // Add glow effect
-                    this.ctx.shadowColor = p.color;
-                    this.ctx.shadowBlur = 10;
-                    
-                    this.ctx.fillStyle = p.color + Math.floor(opacity * 255).toString(16).padStart(2, '0');
-                    this.ctx.beginPath();
-                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    this.ctx.fill();
-                });
-                
-                this.ctx.shadowColor = 'transparent';
-            }
-
-            animate() {
-                this.update();
-                this.draw();
-                
-                if (this.particles.length > 0) {
-                    requestAnimationFrame(() => this.animate());
-                }
-            }
-
-            burstMultiple(count = 5) {
-                for (let i = 0; i < count; i++) {
-                    const x = Math.random() * this.canvas.width;
-                    const y = Math.random() * this.canvas.height;
-                    this.createExplosion(x, y);
-                    setTimeout(() => this.createTrail(x, y), 50 * i);
-                }
-                this.animate();
+                };
+                animate();
             }
         }
 
-        let fireworks = new Fireworks();
-
-        window.addEventListener('resize', () => {
-            fireworks.canvas.width = window.innerWidth;
-            fireworks.canvas.height = window.innerHeight;
-        });
-
         function openGift() {
-            // Multiple spectacular fireworks bursts with staggered timing
-            fireworks.burstMultiple(6);
-            setTimeout(() => fireworks.burstMultiple(5), 300);
-            setTimeout(() => fireworks.burstMultiple(5), 600);
-            setTimeout(() => fireworks.burstMultiple(4), 900);
-            setTimeout(() => fireworks.burstMultiple(4), 1200);
+            // Create multiple firework bursts
+            for (let burst = 0; burst < 5; burst++) {
+                setTimeout(() => {
+                    for (let i = 0; i < 6; i++) {
+                        const x = Math.random() * window.innerWidth;
+                        const y = Math.random() * window.innerHeight;
+                        createFirework(x, y);
+                    }
+                }, burst * 250);
+            }
             
+            // Show message after fireworks start
             setTimeout(() => {
                 document.getElementById('giftPage').classList.add('hidden');
-                document.getElementById('messagePage').classList.remove('hidden');
+                document.getElementById('messagePage').classList.add('show');
             }, 500);
         }
 
         function playVideo() {
-            // Open video automatically in a new tab
             window.open('https://drive.google.com/file/d/1csCqoJ57Q-hIzxIs7ZOxgSx-xNdgUCuh/view?usp=sharing', '_blank');
         }
     </script>
