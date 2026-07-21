@@ -147,12 +147,31 @@
             font-style: italic;
         }
 
+        .video-prompt {
+            font-size: 20px;
+            color: #f5576c;
+            text-align: center;
+            margin: 30px 0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-prompt:hover {
+            transform: scale(1.05);
+        }
+
         .video-container {
             width: 100%;
             margin: 30px 0;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .video-container.show {
+            display: block;
         }
 
         .video-container iframe {
@@ -167,6 +186,36 @@
             text-align: center;
             margin-top: 30px;
             font-weight: bold;
+        }
+
+        /* Fireworks */
+        .fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        @keyframes explode {
+            to {
+                transform: translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
+        }
+
+        .particle {
+            animation: explode 0.6s ease-out forwards;
         }
 
         @media (max-width: 768px) {
@@ -198,10 +247,16 @@
             .video-container iframe {
                 height: 250px;
             }
+
+            .video-prompt {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
+    <div id="fireworksContainer" class="fireworks"></div>
+
     <div class="gift-page" id="giftPage">
         <div class="gift-container">
             <div class="gift-box"></div>
@@ -223,7 +278,11 @@
                 Happy 17 Months anniversary, My Adam. 17 months is not really less, 515 days...of knowing, spending with or without you at some time.... But it's feels really great to have you, have you as my one of own whom i can share each and everything without get judged. How pretty it is to have someone whom I never saw irl, never touched, never had that good fortune to to hold your hands, or lingering ur smell around me after a hug... i wished to feel all them irl one day my love, oneday. And I would like to stay with you forever, if only you want and god said yes to fullfil my wish. Love you my love, I love you. Adam. My Adam.
             </div>
 
-            <div class="video-container">
+            <div class="video-prompt" onclick="showVideo()">
+                Wanna see one more thing? Hehe 🎥✨
+            </div>
+
+            <div class="video-container" id="videoContainer">
                 <iframe src="https://drive.google.com/file/d/1csCqoJ57Q-hIzxIs7ZOxgSx-xNdgUCuh/preview" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
             </div>
 
@@ -232,9 +291,45 @@
     </div>
 
     <script>
+        function createFireworks() {
+            const container = document.getElementById('fireworksContainer');
+            const colors = ['#ff1744', '#ffd700', '#4CAF50', '#ff9800', '#667eea', '#764ba2'];
+            
+            for (let i = 0; i < 50; i++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework particle';
+                
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                firework.style.backgroundColor = color;
+                
+                const startX = Math.random() * window.innerWidth;
+                const startY = Math.random() * window.innerHeight;
+                firework.style.left = startX + 'px';
+                firework.style.top = startY + 'px';
+                
+                const angle = (Math.random() * Math.PI * 2);
+                const velocity = 50 + Math.random() * 200;
+                const tx = Math.cos(angle) * velocity;
+                const ty = Math.sin(angle) * velocity;
+                
+                firework.style.setProperty('--tx', tx + 'px');
+                firework.style.setProperty('--ty', ty + 'px');
+                
+                container.appendChild(firework);
+                
+                setTimeout(() => firework.remove(), 600);
+            }
+        }
+
         function openGift() {
+            createFireworks();
             document.getElementById('giftPage').classList.add('hidden');
             document.getElementById('messagePage').classList.remove('hidden');
+        }
+
+        function showVideo() {
+            const videoContainer = document.getElementById('videoContainer');
+            videoContainer.classList.add('show');
         }
     </script>
 </body>
