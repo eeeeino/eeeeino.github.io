@@ -32,6 +32,8 @@
 
         .gift-container {
             text-align: center;
+            z-index: 10;
+            position: relative;
         }
 
         .gift-box {
@@ -86,6 +88,8 @@
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
+            z-index: 20;
+            position: relative;
         }
 
         .btn-yes {
@@ -110,7 +114,10 @@
 
         .message-page {
             min-height: 100vh;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="floral" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="8" fill="%23d4a5a5"/><circle cx="80" cy="70" r="6" fill="%2390c590"/><circle cx="120" cy="40" r="7" fill="%23d4a5a5"/><circle cx="160" cy="80" r="5" fill="%2390c590"/></pattern></defs><rect width="1000" height="1000" fill="%23e8d4c8"/><rect width="1000" height="1000" fill="url(%23floral)"/></svg>');
+            background-size: cover;
+            background-attachment: fixed;
             padding: 40px 20px;
             display: flex;
             flex-direction: column;
@@ -124,15 +131,18 @@
 
         .message-container {
             max-width: 700px;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            position: relative;
+            backdrop-filter: blur(5px);
         }
 
         .message-title {
             font-size: 32px;
-            color: #f5576c;
+            color: #d4705d;
             text-align: center;
             margin-bottom: 30px;
             font-weight: bold;
@@ -149,73 +159,35 @@
 
         .video-prompt {
             font-size: 20px;
-            color: #f5576c;
+            color: #d4705d;
             text-align: center;
             margin: 30px 0;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-decoration: underline;
         }
 
         .video-prompt:hover {
             transform: scale(1.05);
-        }
-
-        .video-container {
-            width: 100%;
-            margin: 30px 0;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            display: none;
-        }
-
-        .video-container.show {
-            display: block;
-        }
-
-        .video-container iframe {
-            width: 100%;
-            height: 400px;
-            border: none;
+            color: #ff1744;
         }
 
         .signature {
             font-size: 24px;
-            color: #f5576c;
+            color: #d4705d;
             text-align: center;
             margin-top: 30px;
             font-weight: bold;
         }
 
-        /* Fireworks */
-        .fireworks {
+        /* Fireworks Canvas */
+        canvas {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
             z-index: 9999;
-        }
-
-        .firework {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
             pointer-events: none;
-        }
-
-        @keyframes explode {
-            to {
-                transform: translate(var(--tx), var(--ty));
-                opacity: 0;
-            }
-        }
-
-        .particle {
-            animation: explode 0.6s ease-out forwards;
         }
 
         @media (max-width: 768px) {
@@ -244,10 +216,6 @@
                 font-size: 16px;
             }
 
-            .video-container iframe {
-                height: 250px;
-            }
-
             .video-prompt {
                 font-size: 16px;
             }
@@ -255,7 +223,7 @@
     </style>
 </head>
 <body>
-    <div id="fireworksContainer" class="fireworks"></div>
+    <canvas id="fireworksCanvas"></canvas>
 
     <div class="gift-page" id="giftPage">
         <div class="gift-container">
@@ -278,12 +246,8 @@
                 Happy 17 Months anniversary, My Adam. 17 months is not really less, 515 days...of knowing, spending with or without you at some time.... But it's feels really great to have you, have you as my one of own whom i can share each and everything without get judged. How pretty it is to have someone whom I never saw irl, never touched, never had that good fortune to to hold your hands, or lingering ur smell around me after a hug... i wished to feel all them irl one day my love, oneday. And I would like to stay with you forever, if only you want and god said yes to fullfil my wish. Love you my love, I love you. Adam. My Adam.
             </div>
 
-            <div class="video-prompt" onclick="showVideo()">
+            <div class="video-prompt" onclick="playVideo()">
                 Wanna see one more thing? Hehe 🎥✨
-            </div>
-
-            <div class="video-container" id="videoContainer">
-                <iframe src="https://drive.google.com/file/d/1csCqoJ57Q-hIzxIs7ZOxgSx-xNdgUCuh/preview" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
             </div>
 
             <div class="signature">With all my love ❤️</div>
@@ -291,45 +255,141 @@
     </div>
 
     <script>
-        function createFireworks() {
-            const container = document.getElementById('fireworksContainer');
-            const colors = ['#ff1744', '#ffd700', '#4CAF50', '#ff9800', '#667eea', '#764ba2'];
-            
-            for (let i = 0; i < 50; i++) {
-                const firework = document.createElement('div');
-                firework.className = 'firework particle';
+        // Enhanced Beautiful Fireworks with More Effects
+        class Fireworks {
+            constructor() {
+                this.canvas = document.getElementById('fireworksCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.particles = [];
+                this.colors = [
+                    '#ff1744', '#ff5252', '#ff6e40', '#ff9100', '#ffd600',
+                    '#ffd700', '#ffea00', '#4CAF50', '#00e676', '#1de9b6',
+                    '#00bcd4', '#00b0ff', '#667eea', '#764ba2', '#ff006e',
+                    '#ff1493', '#d946ef', '#00d9ff', '#ffb700', '#ff4081'
+                ];
+            }
+
+            createExplosion(x, y) {
+                for (let i = 0; i < 150; i++) {
+                    const angle = (Math.random() * Math.PI * 2);
+                    const velocity = 3 + Math.random() * 10;
+                    const life = 80 + Math.random() * 100;
+                    
+                    this.particles.push({
+                        x: x,
+                        y: y,
+                        vx: Math.cos(angle) * velocity,
+                        vy: Math.sin(angle) * velocity,
+                        life: life,
+                        maxLife: life,
+                        color: this.colors[Math.floor(Math.random() * this.colors.length)],
+                        size: 2 + Math.random() * 5,
+                        gravity: 0.08 + Math.random() * 0.15,
+                        friction: 0.98 + Math.random() * 0.02
+                    });
+                }
+            }
+
+            createTrail(x, y) {
+                for (let i = 0; i < 30; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = 1 + Math.random() * 4;
+                    
+                    this.particles.push({
+                        x: x + Math.cos(angle) * 20,
+                        y: y + Math.sin(angle) * 20,
+                        vx: Math.cos(angle) * velocity,
+                        vy: Math.sin(angle) * velocity,
+                        life: 40 + Math.random() * 40,
+                        maxLife: 40 + Math.random() * 40,
+                        color: this.colors[Math.floor(Math.random() * this.colors.length)],
+                        size: 1 + Math.random() * 2,
+                        gravity: 0.05,
+                        friction: 0.96
+                    });
+                }
+            }
+
+            update() {
+                this.particles.forEach((p, index) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += p.gravity;
+                    p.vx *= p.friction;
+                    p.vy *= p.friction;
+                    p.life--;
+
+                    if (p.life <= 0) {
+                        this.particles.splice(index, 1);
+                    }
+                });
+            }
+
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                firework.style.backgroundColor = color;
+                this.particles.forEach(p => {
+                    const opacity = p.life / p.maxLife;
+                    
+                    // Add glow effect
+                    this.ctx.shadowColor = p.color;
+                    this.ctx.shadowBlur = 10;
+                    
+                    this.ctx.fillStyle = p.color + Math.floor(opacity * 255).toString(16).padStart(2, '0');
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fill();
+                });
                 
-                const startX = Math.random() * window.innerWidth;
-                const startY = Math.random() * window.innerHeight;
-                firework.style.left = startX + 'px';
-                firework.style.top = startY + 'px';
+                this.ctx.shadowColor = 'transparent';
+            }
+
+            animate() {
+                this.update();
+                this.draw();
                 
-                const angle = (Math.random() * Math.PI * 2);
-                const velocity = 50 + Math.random() * 200;
-                const tx = Math.cos(angle) * velocity;
-                const ty = Math.sin(angle) * velocity;
-                
-                firework.style.setProperty('--tx', tx + 'px');
-                firework.style.setProperty('--ty', ty + 'px');
-                
-                container.appendChild(firework);
-                
-                setTimeout(() => firework.remove(), 600);
+                if (this.particles.length > 0) {
+                    requestAnimationFrame(() => this.animate());
+                }
+            }
+
+            burstMultiple(count = 5) {
+                for (let i = 0; i < count; i++) {
+                    const x = Math.random() * this.canvas.width;
+                    const y = Math.random() * this.canvas.height;
+                    this.createExplosion(x, y);
+                    setTimeout(() => this.createTrail(x, y), 50 * i);
+                }
+                this.animate();
             }
         }
 
+        let fireworks = new Fireworks();
+
+        window.addEventListener('resize', () => {
+            fireworks.canvas.width = window.innerWidth;
+            fireworks.canvas.height = window.innerHeight;
+        });
+
         function openGift() {
-            createFireworks();
-            document.getElementById('giftPage').classList.add('hidden');
-            document.getElementById('messagePage').classList.remove('hidden');
+            // Multiple spectacular fireworks bursts with staggered timing
+            fireworks.burstMultiple(6);
+            setTimeout(() => fireworks.burstMultiple(5), 300);
+            setTimeout(() => fireworks.burstMultiple(5), 600);
+            setTimeout(() => fireworks.burstMultiple(4), 900);
+            setTimeout(() => fireworks.burstMultiple(4), 1200);
+            
+            setTimeout(() => {
+                document.getElementById('giftPage').classList.add('hidden');
+                document.getElementById('messagePage').classList.remove('hidden');
+            }, 500);
         }
 
-        function showVideo() {
-            const videoContainer = document.getElementById('videoContainer');
-            videoContainer.classList.add('show');
+        function playVideo() {
+            // Open video automatically in a new tab
+            window.open('https://drive.google.com/file/d/1csCqoJ57Q-hIzxIs7ZOxgSx-xNdgUCuh/view?usp=sharing', '_blank');
         }
     </script>
 </body>
