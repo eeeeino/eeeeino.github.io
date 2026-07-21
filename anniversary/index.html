@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 17 Months Anniversary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Animated background */
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .heart {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.1);
+            }
+            50% {
+                transform: scale(1);
+            }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #764ba2;
+            margin: 20px 0;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .music-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .music-title {
+            font-size: 1.2em;
+            color: #764ba2;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .music-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .song-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .artist-name {
+            font-size: 0.95em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .music-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: 600;
+        }
+
+        .music-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(118, 75, 162, 0.3);
+        }
+
+        .message {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff5f7;
+            border-left: 4px solid #764ba2;
+            border-radius: 5px;
+        }
+
+        .message-text {
+            font-size: 0.95em;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .stars-decoration {
+            margin: 20px 0;
+            font-size: 30px;
+            letter-spacing: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="starContainer"></div>
+
+    <div class="container">
+        <div class="heart">💕</div>
+        
+        <h1>Happy 17 Months Anniversary</h1>
+        <p class="subtitle">My Adam</p>
+
+        <div class="stars-decoration">✨ ✨ ✨</div>
+
+        <div class="music-section">
+            <p class="music-title">Our Song</p>
+            <div class="music-info">
+                <p class="song-name">🎵 Stars</p>
+                <p class="artist-name">by VIZE</p>
+                <a href="https://youtu.be/wAvzTXv9Mvc?si=LJQ3_WkQUJFL5Acn" target="_blank" class="music-link">Listen Now 🎧</a>
+            </div>
+        </div>
+
+        <div class="message">
+            <p class="message-text">Celebrating 17 beautiful months with you. Here's to our love and many more moments together. 🌟</p>
+        </div>
+
+        <div class="stars-decoration">✨ ✨ ✨</div>
+    </div>
+
+    <script>
+        // Generate random stars
+        const starContainer = document.getElementById('starContainer');
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starContainer.appendChild(star);
+        }
+    </script>
+</body>
+</html>
