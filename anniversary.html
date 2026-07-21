@@ -16,7 +16,6 @@
             overflow-x: hidden;
         }
 
-        /* Gift Box Page */
         .gift-page {
             min-height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -25,22 +24,14 @@
             align-items: center;
             flex-direction: column;
             padding: 20px;
-            animation: backgroundShift 10s ease infinite;
         }
 
-        @keyframes backgroundShift {
-            0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-            50% { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); }
+        .gift-page.hidden {
+            display: none;
         }
 
         .gift-container {
             text-align: center;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
         }
 
         .gift-box {
@@ -52,7 +43,7 @@
             margin: 0 auto 30px;
             position: relative;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            animation: boxBounce 0.6s ease-in-out infinite;
+            animation: boxBounce 0.6s infinite;
         }
 
         @keyframes boxBounce {
@@ -70,19 +61,6 @@
             height: 30px;
             background: #ffd700;
             border-radius: 50%;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .gift-box::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 4px;
-            height: 100%;
-            background: #ffd700;
-            border-radius: 2px;
         }
 
         .gift-text {
@@ -108,9 +86,6 @@
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .btn-yes {
@@ -121,7 +96,6 @@
         .btn-yes:hover {
             background: #45a049;
             transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
         .btn-yesss {
@@ -132,34 +106,20 @@
         .btn-yesss:hover {
             background: #e68900;
             transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* Anniversary Message Page */
         .message-page {
-            display: none;
             min-height: 100vh;
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             padding: 40px 20px;
-            animation: pageEnter 0.8s ease;
-        }
-
-        @keyframes pageEnter {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .message-page.active {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+        }
+
+        .message-page.hidden {
+            display: none;
         }
 
         .message-container {
@@ -168,18 +128,6 @@
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: slideIn 0.8s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
         }
 
         .message-title {
@@ -201,7 +149,6 @@
 
         .video-container {
             width: 100%;
-            max-width: 100%;
             margin: 30px 0;
             border-radius: 15px;
             overflow: hidden;
@@ -220,30 +167,6 @@
             text-align: center;
             margin-top: 30px;
             font-weight: bold;
-        }
-
-        .heart {
-            display: inline-block;
-            animation: heartBeat 0.6s ease-in-out infinite;
-        }
-
-        @keyframes heartBeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        .sparkle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #ffd700;
-            border-radius: 50%;
-            animation: sparkleAnimation 2s ease-in-out infinite;
-        }
-
-        @keyframes sparkleAnimation {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
         }
 
         @media (max-width: 768px) {
@@ -279,13 +202,7 @@
     </style>
 </head>
 <body>
-    <!-- Gift Box Page -->
     <div class="gift-page" id="giftPage">
-        <div class="sparkle" style="top: 10%; left: 10%;"></div>
-        <div class="sparkle" style="top: 20%; right: 15%; animation-delay: 0.5s;"></div>
-        <div class="sparkle" style="bottom: 15%; left: 20%; animation-delay: 1s;"></div>
-        <div class="sparkle" style="bottom: 10%; right: 10%; animation-delay: 1.5s;"></div>
-
         <div class="gift-container">
             <div class="gift-box"></div>
             <div class="gift-text">This gift is from your girl 💝</div>
@@ -298,31 +215,26 @@
         </div>
     </div>
 
-    <!-- Anniversary Message Page -->
-    <div class="message-page" id="messagePage">
+    <div class="message-page hidden" id="messagePage">
         <div class="message-container">
-            <div class="message-title">
-                Happy 17 Months Anniversary 💕
-            </div>
+            <div class="message-title">Happy 17 Months Anniversary 💕</div>
 
             <div class="message-text">
                 Happy 17 Months anniversary, My Adam. 17 months is not really less, 515 days...of knowing, spending with or without you at some time.... But it's feels really great to have you, have you as my one of own whom i can share each and everything without get judged. How pretty it is to have someone whom I never saw irl, never touched, never had that good fortune to to hold your hands, or lingering ur smell around me after a hug... i wished to feel all them irl one day my love, oneday. And I would like to stay with you forever, if only you want and god said yes to fullfil my wish. Love you my love, I love you. Adam. My Adam.
             </div>
 
             <div class="video-container">
-                <iframe src="https://drive.google.com/file/d/1csCqoJ57Q-hIzxIs7ZOxgSx-xNdgUCuh/preview" allowfullscreen="true" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                <iframe src="https://drive.google.com/file/d/1csCqoJ57Q-hIzxIs7ZOxgSx-xNdgUCuh/preview" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
             </div>
 
-            <div class="signature">
-                With all my love, <span class="heart">❤️</span>
-            </div>
+            <div class="signature">With all my love ❤️</div>
         </div>
     </div>
 
     <script>
         function openGift() {
-            document.getElementById('giftPage').style.display = 'none';
-            document.getElementById('messagePage').classList.add('active');
+            document.getElementById('giftPage').classList.add('hidden');
+            document.getElementById('messagePage').classList.remove('hidden');
         }
     </script>
 </body>
